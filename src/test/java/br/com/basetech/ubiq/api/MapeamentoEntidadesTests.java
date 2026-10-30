@@ -1,6 +1,10 @@
 package br.com.basetech.ubiq.api;
 
 import br.com.basetech.ubiq.api.cadastro.domain.Paciente;
+import br.com.basetech.ubiq.api.coleta.domain.Amostra;
+import br.com.basetech.ubiq.api.coleta.domain.OrigemSolicitacao;
+import br.com.basetech.ubiq.api.coleta.domain.SolicitacaoExame;
+import br.com.basetech.ubiq.api.coleta.domain.StatusAmostra;
 import br.com.basetech.ubiq.api.estoque.domain.CategoriaItem;
 import br.com.basetech.ubiq.api.estoque.domain.Item;
 import br.com.basetech.ubiq.api.estoque.domain.Local;
@@ -16,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Set;
 import java.util.UUID;
@@ -43,7 +48,7 @@ class MapeamentoEntidadesTests {
 			"MotivoFalta", "RegistroFalta", "ModeloDocumento", "Documento", "ItemReceita", "Encaminhamento",
 			"Item", "Local", "Lote", "Saldo", "Movimentacao", "Requisicao", "ItemRequisicao", "Inventario",
 			"Transferencia", "Receita", "Dispensacao", "Equipamento", "LeituraTemperatura", "FrascoAberto",
-			"Quarentena");
+			"Quarentena", "SolicitacaoExame", "LoteEnvio", "Amostra", "Resultado");
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -86,6 +91,22 @@ class MapeamentoEntidadesTests {
 		assertThatThrownBy(entityManager::flush)
 				.isInstanceOf(ConstraintViolationException.class)
 				.message().containsIgnoringCase("ck_saldo_quantidade");
+	}
+
+	@Test
+	void rejeitaIdentificacaoDeAmostraRepetida() {
+		UUID unidadeId = UUID.randomUUID();
+		UUID pacienteId = UUID.randomUUID();
+		SolicitacaoExame solicitacao = new SolicitacaoExame(unidadeId, pacienteId, OrigemSolicitacao.EXTERNA, "Hemograma", false);
+		entityManager.persist(solicitacao);
+		entityManager.persist(new Amostra(unidadeId, "AM-1", solicitacao, pacienteId, StatusAmostra.COLETADA, Instant.now()));
+		entityManager.flush();
+
+		entityManager.persist(new Amostra(unidadeId, "AM-1", solicitacao, pacienteId, StatusAmostra.COLETADA, Instant.now()));
+
+		assertThatThrownBy(entityManager::flush)
+				.isInstanceOf(ConstraintViolationException.class)
+				.message().containsIgnoringCase("uk_amostra_identificacao");
 	}
 
 }
