@@ -27,7 +27,8 @@ class MapeamentoEntidadesTests {
 
 	private static final Set<String> ENTIDADES = Set.of(
 			"Parametro", "ValorParametro", "LogAuditoria", "Unidade", "Setor", "Paciente", "ResponsavelLegal",
-			"HistoricoAdscricao", "Profissional", "Vinculo", "Usuario", "PerfilUnidade");
+			"HistoricoAdscricao", "Profissional", "Vinculo", "Usuario", "PerfilUnidade", "Equipe", "Microarea",
+			"Domicilio", "Familia", "Tarefa");
 
 	@PersistenceContext
 	private EntityManager entityManager;
