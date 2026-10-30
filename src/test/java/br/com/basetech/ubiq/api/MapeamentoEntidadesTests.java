@@ -42,7 +42,7 @@ class MapeamentoEntidadesTests {
 			"Inscricao", "EntradaListaEspera", "OfertaVaga", "Consentimento", "ModeloMensagem", "Mensagem",
 			"MotivoFalta", "RegistroFalta", "ModeloDocumento", "Documento", "ItemReceita", "Encaminhamento",
 			"Item", "Local", "Lote", "Saldo", "Movimentacao", "Requisicao", "ItemRequisicao", "Inventario",
-			"Transferencia");
+			"Transferencia", "Receita", "Dispensacao");
 
 	@PersistenceContext
 	private EntityManager entityManager;
