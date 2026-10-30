@@ -31,7 +31,7 @@ class MapeamentoEntidadesTests {
 			"Domicilio", "Familia", "Tarefa", "Disponibilidade", "Afastamento", "Escala", "TurnoEscala",
 			"TipoAtendimento", "Turno", "Vaga", "Agendamento", "HistoricoStatus", "Tratamento", "Grupo",
 			"Inscricao", "EntradaListaEspera", "OfertaVaga", "Consentimento", "ModeloMensagem", "Mensagem",
-			"MotivoFalta", "RegistroFalta");
+			"MotivoFalta", "RegistroFalta", "ModeloDocumento", "Documento", "ItemReceita", "Encaminhamento");
 
 	@PersistenceContext
 	private EntityManager entityManager;
