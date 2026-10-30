@@ -1,5 +1,7 @@
 package br.com.basetech.ubiq.api;
 
+import br.com.basetech.ubiq.api.cadastro.domain.Paciente;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.metamodel.EntityType;
@@ -7,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -23,7 +26,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 class MapeamentoEntidadesTests {
 
 	private static final Set<String> ENTIDADES = Set.of(
-			"Parametro", "ValorParametro", "LogAuditoria");
+			"Parametro", "ValorParametro", "LogAuditoria", "Unidade", "Setor", "Paciente", "ResponsavelLegal",
+			"HistoricoAdscricao", "Profissional", "Vinculo");
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -35,6 +39,21 @@ class MapeamentoEntidadesTests {
 				.collect(Collectors.toSet());
 
 		assertThat(mapeadas).isEqualTo(ENTIDADES);
+	}
+
+	@Test
+	void gravaELePaciente() {
+		Paciente paciente = new Paciente("Maria da Silva", LocalDate.of(1980, 5, 10), false);
+		entityManager.persist(paciente);
+		entityManager.flush();
+		entityManager.clear();
+
+		Paciente lido = entityManager.find(Paciente.class, paciente.getId());
+
+		assertThat(lido.getNome()).isEqualTo("Maria da Silva");
+		assertThat(lido.getDataNascimento()).isEqualTo(LocalDate.of(1980, 5, 10));
+		assertThat(lido.getCriadoEm()).isNotNull();
+		assertThat(lido.getAtualizadoEm()).isNotNull();
 	}
 
 }
