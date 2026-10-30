@@ -1,19 +1,28 @@
 package br.com.basetech.ubiq.api;
 
 import br.com.basetech.ubiq.api.cadastro.domain.Paciente;
+import br.com.basetech.ubiq.api.estoque.domain.CategoriaItem;
+import br.com.basetech.ubiq.api.estoque.domain.Item;
+import br.com.basetech.ubiq.api.estoque.domain.Local;
+import br.com.basetech.ubiq.api.estoque.domain.Saldo;
+import br.com.basetech.ubiq.api.estoque.domain.TipoLocal;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.metamodel.EntityType;
+import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest(properties = {
 		"spring.autoconfigure.exclude=",
@@ -31,7 +40,9 @@ class MapeamentoEntidadesTests {
 			"Domicilio", "Familia", "Tarefa", "Disponibilidade", "Afastamento", "Escala", "TurnoEscala",
 			"TipoAtendimento", "Turno", "Vaga", "Agendamento", "HistoricoStatus", "Tratamento", "Grupo",
 			"Inscricao", "EntradaListaEspera", "OfertaVaga", "Consentimento", "ModeloMensagem", "Mensagem",
-			"MotivoFalta", "RegistroFalta", "ModeloDocumento", "Documento", "ItemReceita", "Encaminhamento");
+			"MotivoFalta", "RegistroFalta", "ModeloDocumento", "Documento", "ItemReceita", "Encaminhamento",
+			"Item", "Local", "Lote", "Saldo", "Movimentacao", "Requisicao", "ItemRequisicao", "Inventario",
+			"Transferencia");
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -58,6 +69,22 @@ class MapeamentoEntidadesTests {
 		assertThat(lido.getDataNascimento()).isEqualTo(LocalDate.of(1980, 5, 10));
 		assertThat(lido.getCriadoEm()).isNotNull();
 		assertThat(lido.getAtualizadoEm()).isNotNull();
+	}
+
+	@Test
+	void rejeitaSaldoNegativo() {
+		UUID unidadeId = UUID.randomUUID();
+		Item item = new Item("DIP500", "Dipirona 500 mg", "CP", CategoriaItem.MEDICAMENTO, true, false, false, false);
+		Local local = new Local(unidadeId, "Farmácia", TipoLocal.FARMACIA);
+		entityManager.persist(item);
+		entityManager.persist(local);
+		entityManager.flush();
+
+		entityManager.persist(new Saldo(unidadeId, item, local, new BigDecimal("-1.000")));
+
+		assertThatThrownBy(entityManager::flush)
+				.isInstanceOf(ConstraintViolationException.class)
+				.message().containsIgnoringCase("ck_saldo_quantidade");
 	}
 
 }
