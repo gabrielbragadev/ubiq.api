@@ -30,7 +30,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest(properties = {
-		"spring.autoconfigure.exclude=",
 		"spring.flyway.enabled=false",
 		"spring.datasource.url=jdbc:h2:mem:ubiq;MODE=PostgreSQL;DB_CLOSE_DELAY=-1",
 		"spring.jpa.hibernate.ddl-auto=create-drop",

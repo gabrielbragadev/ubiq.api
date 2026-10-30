@@ -37,6 +37,13 @@ public class Unidade extends EntidadeInativavel {
 		this.horarioFuncionamento = horarioFuncionamento;
 	}
 
+	public void atualizar(String nome, String cnes, String endereco, String horarioFuncionamento) {
+		this.nome = nome;
+		this.cnes = cnes;
+		this.endereco = endereco;
+		this.horarioFuncionamento = horarioFuncionamento;
+	}
+
 	public String getNome() {
 		return nome;
 	}
