@@ -30,7 +30,7 @@ class MapeamentoEntidadesTests {
 			"HistoricoAdscricao", "Profissional", "Vinculo", "Usuario", "PerfilUnidade", "Equipe", "Microarea",
 			"Domicilio", "Familia", "Tarefa", "Disponibilidade", "Afastamento", "Escala", "TurnoEscala",
 			"TipoAtendimento", "Turno", "Vaga", "Agendamento", "HistoricoStatus", "Tratamento", "Grupo",
-			"Inscricao", "EntradaListaEspera", "OfertaVaga");
+			"Inscricao", "EntradaListaEspera", "OfertaVaga", "Consentimento", "ModeloMensagem", "Mensagem");
 
 	@PersistenceContext
 	private EntityManager entityManager;
