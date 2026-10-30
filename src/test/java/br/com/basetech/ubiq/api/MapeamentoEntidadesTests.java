@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class MapeamentoEntidadesTests {
 
 	private static final Set<String> ENTIDADES = Set.of(
-			"Parametro", "ValorParametro");
+			"Parametro", "ValorParametro", "LogAuditoria");
 
 	@PersistenceContext
 	private EntityManager entityManager;
